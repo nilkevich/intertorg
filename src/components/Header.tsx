@@ -19,8 +19,8 @@ export default function Header() {
             <Link href="/about" className="text-gray-700 hover:text-blue-900">
               О компании
             </Link>
-            <Link href="/equipment" className="text-gray-700 hover:text-blue-900">
-              Оборудование
+            <Link href="/catalog" className="text-gray-700 hover:text-blue-900">
+              Каталог
             </Link>
             <Link href="/materials" className="text-gray-700 hover:text-blue-900">
               Материалы
@@ -69,8 +69,8 @@ export default function Header() {
             <Link href="/about" className="block text-gray-700 hover:text-blue-900">
               О компании
             </Link>
-            <Link href="/equipment" className="block text-gray-700 hover:text-blue-900">
-              Оборудование
+            <Link href="/catalog" className="block text-gray-700 hover:text-blue-900">
+              Каталог
             </Link>
             <Link href="/materials" className="block text-gray-700 hover:text-blue-900">
               Материалы
