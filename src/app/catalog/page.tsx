@@ -1,171 +1,229 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
+import ProductCard from '@/components/ProductCard';
+import CatalogFilter from '@/components/CatalogFilter';
+
+interface FilterOption {
+  id: string;
+  name: string;
+  subcategories?: FilterOption[];
+}
+
+interface Product {
+  id: string;
+  name: string;
+  imageUrl: string;
+  categoryId: string;
+  description: string;
+}
+
+const mockProducts: Product[] = [
+  {
+    id: '1',
+    name: 'Фрезерный станок с ЧПУ',
+    imageUrl: '/images/not-image.png',
+    categoryId: '1-1',
+    description: 'Высокоточный фрезерный станок с ЧПУ для обработки металлов и сплавов'
+  },
+  {
+    id: '2',
+    name: 'Токарный станок с ЧПУ',
+    imageUrl: '/images/not-image.png',
+    categoryId: '1-2',
+    description: 'Современный токарный станок с ЧПУ для обработки деталей'
+  },
+  {
+    id: '3',
+    name: 'Коннектор LEMO',
+    imageUrl: '/images/not-image.png',
+    categoryId: '3-1',
+    description: 'Высококачественный коннектор для промышленного применения'
+  },
+  {
+    id: '4',
+    name: 'Шаговый двигатель',
+    imageUrl: '/images/not-image.png',
+    categoryId: '3-2',
+    description: 'Точный шаговый двигатель для систем позиционирования'
+  },
+  {
+    id: '5',
+    name: 'Трапецеидальный винт',
+    imageUrl: '/images/not-image.png',
+    categoryId: '5-1',
+    description: 'Высококачественный трапецеидальный винт для передачи движения'
+  },
+  {
+    id: '6',
+    name: 'Фреза концевая',
+    imageUrl: '/images/not-image.png',
+    categoryId: '10-1',
+    description: 'Твердосплавная концевая фреза для обработки металлов'
+  }
+];
+
+const categories = [
+  {
+    id: '1',
+    name: 'Станки с ЧПУ',
+    subcategories: [
+      { id: '1-1', name: 'Фрезерные станки' },
+      { id: '1-2', name: 'Токарные станки' },
+      { id: '1-3', name: 'Обрабатывающие центры' }
+    ]
+  },
+  {
+    id: '2',
+    name: 'Станки',
+    subcategories: [
+      { id: '2-1', name: 'GESAC' },
+      { id: '2-2', name: 'Sandvik Coromant' },
+      { id: '2-3', name: 'Schunk' }
+    ]
+  },
+  {
+    id: '3',
+    name: 'Электрика и соединители',
+    subcategories: [
+      { id: '3-1', name: 'Коннекторы LEMO' },
+      { id: '3-2', name: 'Шаговые двигатели' },
+      { id: '3-3', name: 'Системы управления' }
+    ]
+  },
+  {
+    id: '4',
+    name: 'Автоматика и управление',
+    subcategories: [
+      { id: '4-1', name: 'Блоки управления' },
+      { id: '4-2', name: 'Датчики' },
+      { id: '4-3', name: 'Системы измерения' }
+    ]
+  },
+  {
+    id: '5',
+    name: 'Механика и привод',
+    subcategories: [
+      { id: '5-1', name: 'Трапецеидальные винты' },
+      { id: '5-2', name: 'Зубчатые ремни' },
+      { id: '5-3', name: 'Системы смазки' }
+    ]
+  },
+  {
+    id: '6',
+    name: 'Станки по типу обработки',
+    subcategories: [
+      { id: '6-1', name: 'Фрезерные' },
+      { id: '6-2', name: 'Токарные' },
+      { id: '6-3', name: 'Шлифовальные' }
+    ]
+  },
+  {
+    id: '7',
+    name: 'Ручной инструмент',
+    subcategories: [
+      { id: '7-1', name: 'Ручной инструмент' },
+      { id: '7-2', name: 'Рабочие столы' },
+      { id: '7-3', name: 'Верстаки' }
+    ]
+  },
+  {
+    id: '8',
+    name: 'Измерительный инструмент',
+    subcategories: [
+      { id: '8-1', name: 'Калибры' },
+      { id: '8-2', name: 'Микрометры' },
+      { id: '8-3', name: 'Штангенциркули' }
+    ]
+  },
+  {
+    id: '9',
+    name: 'Пневмошлифмашины',
+    subcategories: [
+      { id: '9-1', name: 'Прямые' },
+      { id: '9-2', name: 'Угловые' },
+      { id: '9-3', name: 'Орбитальные' }
+    ]
+  },
+  {
+    id: '10',
+    name: 'Режущий инструмент',
+    subcategories: [
+      { id: '10-1', name: 'Фрезы' },
+      { id: '10-2', name: 'Сверла' },
+      { id: '10-3', name: 'Резцы' }
+    ]
+  },
+  {
+    id: '11',
+    name: 'Смазочные материалы',
+    subcategories: [
+      { id: '11-1', name: 'Loctite' },
+      { id: '11-2', name: 'Смазки' },
+      { id: '11-3', name: 'Адгезивы' }
+    ]
+  }
+];
+
+const getCategoryName = (categoryId: string, categories: FilterOption[]): string => {
+  const [mainId, subId] = categoryId.split('-');
+  const mainCategory = categories.find(c => c.id === mainId);
+  if (!mainCategory) return '';
+  
+  if (!subId) return mainCategory.name;
+  
+  const subCategory = mainCategory.subcategories?.find(s => s.id === categoryId);
+  return subCategory ? subCategory.name : mainCategory.name;
+};
 
 export default function CatalogPage() {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredProducts = mockProducts.filter((product) => {
+    const matchesCategory = selectedCategory
+      ? product.categoryId === selectedCategory || product.categoryId.startsWith(selectedCategory.split('-')[0])
+      : true;
+    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         product.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
   return (
-    <main className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Каталог</h1>
-      <ul className="list-disc pl-6 space-y-2">
-        <li>
-          <span className="font-semibold">Станки</span>
-          <ul className="list-disc pl-6">
-            <li>Станочная оснастка и аксессуары</li>
-            <li>Станки с ЧПУ</li>
-            <li>GESAC</li>
-            <li>Комплекты деталей</li>
-            <li>Sandvik Coromant</li>
-            <li>Профильные направляющие</li>
-            <li>Schunk</li>
-            <li>Цилиндрические направляющие</li>
-            <li>Chain Headway</li>
-            <li>Линейные подшипники и модули</li>
-            <li>Toolseng</li>
-            <li>Шарико-винтовые передачи</li>
-            <li>Gerardi</li>
-            <li>Зубчатые рейки и шестеренки</li>
-          </ul>
-        </li>
-        <li>
-          <span className="font-semibold">Электрика и соединители</span>
-          <ul className="list-disc pl-6">
-            <li>Коннекторы и разъемы LEMO</li>
-            <li>Шарико-винтовые передачи</li>
-            <li>Коннекторы низкого напряжения</li>
-            <li>Шаговые двигатели и аксессуары</li>
-            <li>Пластиковые коннекторы</li>
-            <li>Асинхронные моторы</li>
-            <li>Малогабаритные разъёмы</li>
-            <li>Частотные преобразователи</li>
-            <li>Коннекторы для жёстких внешних условий</li>
-            <li>Шпиндели</li>
-            <li>Коаксиальные / трёхвыводные разъёмы</li>
-            <li>Опоры ходовых винтов</li>
-            <li>Разъёмы высокого напряжения</li>
-            <li>Системы управления с ЧПУ</li>
-            <li>Соединители с замком</li>
-            <li>Драйверы и контроллеры</li>
-          </ul>
-        </li>
-        <li>
-          <span className="font-semibold">Автоматика и управление</span>
-          <ul className="list-disc pl-6">
-            <li>Блоки управления станком</li>
-            <li>Датчики концевые</li>
-            <li>Системы измерения и позиционирования</li>
-            <li>Редукторы</li>
-            <li>Сервоприводы</li>
-            <li>Вакуумное оборудование</li>
-          </ul>
-        </li>
-        <li>
-          <span className="font-semibold">Механика и привод</span>
-          <ul className="list-disc pl-6">
-            <li>Трапецеидальные винты и гайки</li>
-            <li>Зубчатые ремни и шкивы</li>
-            <li>Поворотные оси</li>
-            <li>Кабель-каналы</li>
-            <li>Муфты соединительные</li>
-            <li>Системы централизованной смазки</li>
-            <li>Компрессоры</li>
-          </ul>
-        </li>
-        <li>
-          <span className="font-semibold">Станки по типу обработки</span>
-          <ul className="list-disc pl-6">
-            <li>Фрезерные станки</li>
-            <li>Станки для обработки древесины</li>
-            <li>Станки для обработки металла</li>
-            <li>Станки для раскроя</li>
-            <li>Круглофрезерные станки</li>
-            <li>Ручные токарные станки</li>
-            <li>Обрабатывающие центры</li>
-            <li>Токарные станки с наклонной станиной</li>
-            <li>Станки для нарезания резьбы</li>
-            <li>Вертикальный токарный станок с ЧПУ</li>
-            <li>Пильные станки</li>
-            <li>Пневматические молотки</li>
-            <li>Сверлильные станки</li>
-            <li>Шлифовальные станки</li>
-            <li>Зубофрезерные станки</li>
-            <li>Формовочный станок</li>
-            <li>Долбежный станок</li>
-          </ul>
-        </li>
-        <li>
-          <span className="font-semibold">Ручной инструмент и рабочее место</span>
-          <ul className="list-disc pl-6">
-            <li>Ручной инструмент</li>
-            <li>Рабочие столы, верстаки</li>
-            <li>Аппарат контактно-конденсаторной сварки</li>
-            <li>Электроэрозионный экстрактор</li>
-            <li>Струбцины</li>
-            <li>Индукционная система нагрева</li>
-          </ul>
-        </li>
-        <li>Измерительный инструмент</li>
-        <li>Пневмошлифмашины</li>
-        <li>
-          <span className="font-semibold">Режущий инструмент</span>
-          <ul className="list-disc pl-6">
-            <li>
-              Фрезы
-              <ul className="list-disc pl-6">
-                <li>Фрезы по алюминию</li>
-                <li>Фрезы спиральные</li>
-                <li>Компрессионные фрезы</li>
-                <li>Прямые фрезы</li>
-                <li>Фрезы для 3D обработки</li>
-                <li>Фрезы по стали</li>
-                <li>Фрезы со сменными пластинами</li>
-                <li>Сменные твердосплавные пластины</li>
-                <li>Фрезы алмазные концевые</li>
-                <li>Фрезы V-образные</li>
-                <li>Фасонные фрезы</li>
-                <li>Фрезы для универсальной обработки</li>
-                <li>Фрезы со сменными ножами</li>
-                <li>Фрезы серии ТСТ</li>
-                <li>Фрезы для ручного фрезера</li>
-              </ul>
-            </li>
-            <li>
-              Сверла
-              <ul className="list-disc pl-6">
-                <li>Сверло для печатных плат</li>
-                <li>Сверла по металлу</li>
-                <li>Сверла присадочные</li>
-                <li>Сверла чашечные</li>
-              </ul>
-            </li>
-            <li>Граверы</li>
-            <li>Фрезы алмазные по камню</li>
-            <li>Инструмент для токарного станка по металлу</li>
-            <li>Инструмент для токарного станка по дереву</li>
-            <li>Нож флюгерного типа</li>
-            <li>Расточные системы</li>
-            <li>Цанги, гайки</li>
-            <li>Щетки для шлифовки поверхностей</li>
-            <li>Шлифовочные машинки</li>
-            <li>Инструмент для термопластичного сверления</li>
-            <li>Резьбофрезы</li>
-            <li>Метчики</li>
-            <li>Плашка резьбонарезная</li>
-            <li>Наборы коронок</li>
-            <li>Дисковые фрезы по металлу</li>
-            <li>Державки долбежные</li>
-            <li>Ротационные прошивки</li>
-          </ul>
-        </li>
-        <li>
-          <span className="font-semibold">Смазочные материалы и адгезивы</span>
-          <ul className="list-disc pl-6">
-            <li>Loctite Frekote 770NC</li>
-            <li>Loctite Frekote 700NC</li>
-            <li>Loctite Frekote S50</li>
-            <li>Loctite Frekote C-300</li>
-            <li>Loctite Frekote FREWAX</li>
-            <li>и другие материалы Loctite по запросу</li>
-          </ul>
-        </li>
-      </ul>
-    </main>
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex flex-col md:flex-row gap-8">
+        <CatalogFilter
+          categories={categories}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+        />
+        <div className="flex-1">
+          <div className="mb-6">
+            <input
+              type="text"
+              placeholder="Поиск товаров..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          {selectedCategory && (
+            <h2 className="text-2xl font-semibold mb-6">
+              {getCategoryName(selectedCategory, categories)}
+            </h2>
+          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} categories={categories} />
+            ))}
+          </div>
+          {filteredProducts.length === 0 && (
+            <div className="text-center py-8 text-gray-500">
+              Товары не найдены
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 } 
