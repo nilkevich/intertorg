@@ -48,6 +48,89 @@ const productDetails = {
   }
 };
 
+interface Brand {
+  id: string;
+  name: string;
+  logoUrl: string;
+  categoryId: string;
+}
+
+const mockBrands: Brand[] = [
+  {
+    id: '1',
+    name: 'GESAC',
+    logoUrl: '/images/not-image.png',
+    categoryId: '2-1'
+  },
+  {
+    id: '2',
+    name: 'Sandvik Coromant',
+    logoUrl: '/images/not-image.png',
+    categoryId: '2-2'
+  },
+  {
+    id: '3',
+    name: 'Schunk',
+    logoUrl: '/images/not-image.png',
+    categoryId: '2-3'
+  },
+  {
+    id: '4',
+    name: 'DMG MORI',
+    logoUrl: '/images/not-image.png',
+    categoryId: '1-1'
+  },
+  {
+    id: '5',
+    name: 'HAAS',
+    logoUrl: '/images/not-image.png',
+    categoryId: '1-2'
+  },
+  {
+    id: '6',
+    name: 'Mazak',
+    logoUrl: '/images/not-image.png',
+    categoryId: '1-3'
+  },
+  {
+    id: '7',
+    name: 'LEMO',
+    logoUrl: '/images/not-image.png',
+    categoryId: '3-1'
+  },
+  {
+    id: '8',
+    name: 'Siemens',
+    logoUrl: '/images/not-image.png',
+    categoryId: '3-2'
+  }
+];
+
+const categories = [
+  {
+    id: '1',
+    name: 'Станки с ЧПУ',
+    subcategories: [
+      { id: '1-1', name: 'Фрезерные станки' },
+      { id: '1-2', name: 'Токарные станки' },
+      { id: '1-3', name: 'Обрабатывающие центры' }
+    ]
+  },
+  {
+    id: '2',
+    name: 'Станки'
+  },
+  {
+    id: '3',
+    name: 'Электрика и соединители',
+    subcategories: [
+      { id: '3-1', name: 'Коннекторы LEMO' },
+      { id: '3-2', name: 'Шаговые двигатели' },
+      { id: '3-3', name: 'Системы управления' }
+    ]
+  }
+];
+
 export default function ProductPage({ params }: { params: { id: string } }) {
   const product = productDetails[params.id as keyof typeof productDetails];
 

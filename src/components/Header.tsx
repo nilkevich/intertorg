@@ -10,25 +10,25 @@ export default function Header() {
     <header className="bg-white shadow-md">
       <nav className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold text-blue-900">
+          <Link href="/" className="text-2xl font-bold text-[#2d1457]">
             Интерторг
           </Link>
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-8">
-            <Link href="/about" className="text-gray-700 hover:text-blue-900">
+            <Link href="/about" className="text-gray-700 hover:text-[#ff6b00]">
               О компании
             </Link>
-            <Link href="/catalog" className="text-gray-700 hover:text-blue-900">
+            <Link href="/catalog" className="text-gray-700 hover:text-[#ff6b00]">
               Каталог
             </Link>
-            <Link href="/materials" className="text-gray-700 hover:text-blue-900">
+            <Link href="/materials" className="text-gray-700 hover:text-[#ff6b00]">
               Материалы
             </Link>
-            <Link href="/services" className="text-gray-700 hover:text-blue-900">
+            <Link href="/services" className="text-gray-700 hover:text-[#ff6b00]">
               Услуги
             </Link>
-            <Link href="/contacts" className="text-gray-700 hover:text-blue-900">
+            <Link href="/contacts" className="text-gray-700 hover:text-[#ff6b00]">
               Контакты
             </Link>
           </div>
@@ -66,19 +66,19 @@ export default function Header() {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden mt-4 space-y-4">
-            <Link href="/about" className="block text-gray-700 hover:text-blue-900">
+            <Link href="/about" className="block text-gray-700 hover:text-[#ff6b00]">
               О компании
             </Link>
-            <Link href="/catalog" className="block text-gray-700 hover:text-blue-900">
+            <Link href="/catalog" className="block text-gray-700 hover:text-[#ff6b00]">
               Каталог
             </Link>
-            <Link href="/materials" className="block text-gray-700 hover:text-blue-900">
+            <Link href="/materials" className="block text-gray-700 hover:text-[#ff6b00]">
               Материалы
             </Link>
-            <Link href="/services" className="block text-gray-700 hover:text-blue-900">
+            <Link href="/services" className="block text-gray-700 hover:text-[#ff6b00]">
               Услуги
             </Link>
-            <Link href="/contacts" className="block text-gray-700 hover:text-blue-900">
+            <Link href="/contacts" className="block text-gray-700 hover:text-[#ff6b00]">
               Контакты
             </Link>
           </div>

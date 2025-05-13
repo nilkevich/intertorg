@@ -16,10 +16,10 @@ export default function ContactForm({ type }: ContactFormProps) {
     notes: '',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the form data to your backend
-    console.log('Form submitted:', formData);
+    // console.log('Form submitted:', formData);
+    // Add your form submission logic here
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -37,7 +37,7 @@ export default function ContactForm({ type }: ContactFormProps) {
             placeholder="Ваше имя"
             value={formData.name}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff6b00]"
             required
           />
         </div>
@@ -48,13 +48,13 @@ export default function ContactForm({ type }: ContactFormProps) {
             placeholder="Номер телефона"
             value={formData.phone}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff6b00]"
             required
           />
         </div>
         <button
           type="submit"
-          className="w-full bg-blue-900 text-white py-2 rounded-lg hover:bg-blue-800 transition-colors"
+          className="w-full bg-[#2d1457] text-white py-2 rounded-lg hover:bg-[#2d1457]/90 transition-colors"
         >
           Обсудить поставку
         </button>
@@ -71,7 +71,7 @@ export default function ContactForm({ type }: ContactFormProps) {
           placeholder="Ваше имя"
           value={formData.name}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff6b00]"
           required
         />
       </div>
@@ -82,7 +82,7 @@ export default function ContactForm({ type }: ContactFormProps) {
           placeholder="Как с вами связаться?"
           value={formData.phone}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff6b00]"
           required
         />
       </div>
@@ -93,7 +93,7 @@ export default function ContactForm({ type }: ContactFormProps) {
           placeholder="Производитель"
           value={formData.manufacturer}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff6b00]"
         />
       </div>
       <div>
@@ -103,7 +103,7 @@ export default function ContactForm({ type }: ContactFormProps) {
           placeholder="Артикул/модель"
           value={formData.model}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff6b00]"
         />
       </div>
       <div>
@@ -113,7 +113,7 @@ export default function ContactForm({ type }: ContactFormProps) {
           placeholder="Количество"
           value={formData.quantity}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff6b00]"
         />
       </div>
       <div>
@@ -122,13 +122,13 @@ export default function ContactForm({ type }: ContactFormProps) {
           placeholder="Дополнительные пожелания"
           value={formData.notes}
           onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff6b00]"
           rows={4}
         />
       </div>
       <button
         type="submit"
-        className="w-full bg-blue-900 text-white py-2 rounded-lg hover:bg-blue-800 transition-colors"
+        className="w-full bg-[#2d1457] text-white py-2 rounded-lg hover:bg-[#2d1457]/90 transition-colors"
       >
         Отправить запрос
       </button>

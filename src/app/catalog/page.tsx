@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
-import ProductCard from '@/components/ProductCard';
+import React, { useState, useEffect } from 'react';
 import CatalogFilter from '@/components/CatalogFilter';
+import Image from 'next/image';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface FilterOption {
   id: string;
@@ -10,57 +11,21 @@ interface FilterOption {
   subcategories?: FilterOption[];
 }
 
-interface Product {
+interface Brand {
   id: string;
   name: string;
-  imageUrl: string;
   categoryId: string;
-  description: string;
 }
 
-const mockProducts: Product[] = [
-  {
-    id: '1',
-    name: 'Фрезерный станок с ЧПУ',
-    imageUrl: '/images/not-image.png',
-    categoryId: '1-1',
-    description: 'Высокоточный фрезерный станок с ЧПУ для обработки металлов и сплавов'
-  },
-  {
-    id: '2',
-    name: 'Токарный станок с ЧПУ',
-    imageUrl: '/images/not-image.png',
-    categoryId: '1-2',
-    description: 'Современный токарный станок с ЧПУ для обработки деталей'
-  },
-  {
-    id: '3',
-    name: 'Коннектор LEMO',
-    imageUrl: '/images/not-image.png',
-    categoryId: '3-1',
-    description: 'Высококачественный коннектор для промышленного применения'
-  },
-  {
-    id: '4',
-    name: 'Шаговый двигатель',
-    imageUrl: '/images/not-image.png',
-    categoryId: '3-2',
-    description: 'Точный шаговый двигатель для систем позиционирования'
-  },
-  {
-    id: '5',
-    name: 'Трапецеидальный винт',
-    imageUrl: '/images/not-image.png',
-    categoryId: '5-1',
-    description: 'Высококачественный трапецеидальный винт для передачи движения'
-  },
-  {
-    id: '6',
-    name: 'Фреза концевая',
-    imageUrl: '/images/not-image.png',
-    categoryId: '10-1',
-    description: 'Твердосплавная концевая фреза для обработки металлов'
-  }
+const mockBrands: Brand[] = [
+  { id: '1', name: 'GESAC', categoryId: '2' },
+  { id: '2', name: 'Sandvik Coromant', categoryId: '2' },
+  { id: '3', name: 'Schunk', categoryId: '2' },
+  { id: '4', name: 'DMG MORI', categoryId: '1' },
+  { id: '5', name: 'HAAS', categoryId: '1' },
+  { id: '6', name: 'Mazak', categoryId: '1' },
+  { id: '7', name: 'LEMO', categoryId: '3' },
+  { id: '8', name: 'Siemens', categoryId: '3' }
 ];
 
 const categories = [
@@ -76,11 +41,7 @@ const categories = [
   {
     id: '2',
     name: 'Станки',
-    subcategories: [
-      { id: '2-1', name: 'GESAC' },
-      { id: '2-2', name: 'Sandvik Coromant' },
-      { id: '2-3', name: 'Schunk' }
-    ]
+    subcategories: [],
   },
   {
     id: '3',
@@ -90,104 +51,52 @@ const categories = [
       { id: '3-2', name: 'Шаговые двигатели' },
       { id: '3-3', name: 'Системы управления' }
     ]
-  },
-  {
-    id: '4',
-    name: 'Автоматика и управление',
-    subcategories: [
-      { id: '4-1', name: 'Блоки управления' },
-      { id: '4-2', name: 'Датчики' },
-      { id: '4-3', name: 'Системы измерения' }
-    ]
-  },
-  {
-    id: '5',
-    name: 'Механика и привод',
-    subcategories: [
-      { id: '5-1', name: 'Трапецеидальные винты' },
-      { id: '5-2', name: 'Зубчатые ремни' },
-      { id: '5-3', name: 'Системы смазки' }
-    ]
-  },
-  {
-    id: '6',
-    name: 'Станки по типу обработки',
-    subcategories: [
-      { id: '6-1', name: 'Фрезерные' },
-      { id: '6-2', name: 'Токарные' },
-      { id: '6-3', name: 'Шлифовальные' }
-    ]
-  },
-  {
-    id: '7',
-    name: 'Ручной инструмент',
-    subcategories: [
-      { id: '7-1', name: 'Ручной инструмент' },
-      { id: '7-2', name: 'Рабочие столы' },
-      { id: '7-3', name: 'Верстаки' }
-    ]
-  },
-  {
-    id: '8',
-    name: 'Измерительный инструмент',
-    subcategories: [
-      { id: '8-1', name: 'Калибры' },
-      { id: '8-2', name: 'Микрометры' },
-      { id: '8-3', name: 'Штангенциркули' }
-    ]
-  },
-  {
-    id: '9',
-    name: 'Пневмошлифмашины',
-    subcategories: [
-      { id: '9-1', name: 'Прямые' },
-      { id: '9-2', name: 'Угловые' },
-      { id: '9-3', name: 'Орбитальные' }
-    ]
-  },
-  {
-    id: '10',
-    name: 'Режущий инструмент',
-    subcategories: [
-      { id: '10-1', name: 'Фрезы' },
-      { id: '10-2', name: 'Сверла' },
-      { id: '10-3', name: 'Резцы' }
-    ]
-  },
-  {
-    id: '11',
-    name: 'Смазочные материалы',
-    subcategories: [
-      { id: '11-1', name: 'Loctite' },
-      { id: '11-2', name: 'Смазки' },
-      { id: '11-3', name: 'Адгезивы' }
-    ]
   }
 ];
 
-const getCategoryName = (categoryId: string, categories: FilterOption[]): string => {
-  const [mainId, subId] = categoryId.split('-');
-  const mainCategory = categories.find(c => c.id === mainId);
-  if (!mainCategory) return '';
-  
-  if (!subId) return mainCategory.name;
-  
-  const subCategory = mainCategory.subcategories?.find(s => s.id === categoryId);
-  return subCategory ? subCategory.name : mainCategory.name;
-};
-
 export default function CatalogPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredProducts = mockProducts.filter((product) => {
-    const matchesCategory = selectedCategory
-      ? product.categoryId === selectedCategory || product.categoryId.startsWith(selectedCategory.split('-')[0])
-      : true;
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         product.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
+  // Initialize category from URL
+  useEffect(() => {
+    const categoryParam = searchParams.get('category');
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+    }
+  }, [searchParams]);
+
+  const handleCategoryClick = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    router.push(`/catalog?category=${categoryId}`, { scroll: false });
+  };
+
+  const filteredBrands = mockBrands.filter((brand) => {
+    if (!selectedCategory) {
+      return true;
+    }
+    
+    // Если выбрана основная категория
+    if (!selectedCategory.includes('-')) {
+      return brand.categoryId === selectedCategory;
+    }
+    
+    // Если выбрана подкатегория
+    const parentCategoryId = selectedCategory.split('-')[0];
+    return brand.categoryId === parentCategoryId;
   });
+
+  // Получаем данные о выбранной категории
+  const selectedCategoryData = categories.find(c => c.id === selectedCategory);
+  const subcategories = selectedCategoryData?.subcategories || [];
+
+  // Проверяем, является ли выбранная категория подкатегорией
+  const isSubcategory = selectedCategory?.includes('-');
+
+  // Проверяем, есть ли у выбранной категории подкатегории
+  const hasSubcategories = subcategories.length > 0;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -195,33 +104,138 @@ export default function CatalogPage() {
         <CatalogFilter
           categories={categories}
           selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
+          onCategoryChange={handleCategoryClick}
         />
         <div className="flex-1">
           <div className="mb-6">
             <input
               type="text"
-              placeholder="Поиск товаров..."
+              placeholder="Поиск брендов..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff6b00]"
             />
           </div>
+          
           {selectedCategory && (
             <h2 className="text-2xl font-semibold mb-6">
-              {getCategoryName(selectedCategory, categories)}
+              {selectedCategoryData?.name}
             </h2>
           )}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} categories={categories} />
-            ))}
-          </div>
-          {filteredProducts.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
-              Товары не найдены
+
+          {/* Subcategories Section */}
+          {selectedCategory && !isSubcategory && hasSubcategories && (
+            <div className="mb-8">
+              <h3 className="text-lg font-medium mb-4">Подкатегории:</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                {subcategories.map((subcategory) => (
+                  <button
+                    key={subcategory.id}
+                    onClick={() => handleCategoryClick(subcategory.id)}
+                    className={`p-4 rounded-lg border ${
+                      selectedCategory === subcategory.id
+                        ? 'border-[#ff6b00] bg-[#ff6b00]/10'
+                        : 'border-gray-200 hover:border-[#ff6b00]'
+                    }`}
+                  >
+                    {subcategory.name}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
+
+          {/* Brands Section */}
+          {(!selectedCategory || isSubcategory || !hasSubcategories) && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 mb-12">
+              {filteredBrands.map((brand) => (
+                <div key={brand.id} className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                  <div className="aspect-w-16 aspect-h-9 relative mb-4">
+                    <Image
+                      src="/images/not-image.png"
+                      alt={brand.name}
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  <h3 className="text-center font-medium">{brand.name}</h3>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* SEO Block */}
+          <div className="bg-gray-50 p-6 rounded-lg mb-12">
+            <h3 className="text-xl font-semibold mb-4">
+              {selectedCategory 
+                ? `О категории "${selectedCategoryData?.name}"`
+                : 'О нашем каталоге'}
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Мы являемся официальными дистрибьюторами ведущих производителей промышленного оборудования и инструмента. 
+              {filteredBrands.length > 0 && (
+                <>В данном разделе представлены такие известные бренды как {filteredBrands.map(b => b.name).join(', ')}.</>
+              )}
+            </p>
+            <p className="text-gray-600 mb-4">
+              Мы готовы организовать поставку любого оборудования и инструмента от этих производителей. 
+              Наши специалисты помогут подобрать оптимальное решение под ваши задачи и бюджет.
+            </p>
+            <p className="text-gray-600">
+              {selectedCategory 
+                ? 'Выберите интересующий вас бренд или оставьте заявку для получения дополнительной информации.'
+                : 'Выберите интересующую вас категорию или подкатегорию для просмотра доступных брендов.'}
+            </p>
+          </div>
+
+          {/* Request Form */}
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h3 className="text-xl font-semibold mb-4">Оставить заявку</h3>
+            <form className="space-y-4">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Имя</label>
+                <input
+                  type="text"
+                  id="name"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#ff6b00] focus:border-[#ff6b00]"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#ff6b00] focus:border-[#ff6b00]"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Телефон</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#ff6b00] focus:border-[#ff6b00]"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700">Сообщение</label>
+                <textarea
+                  id="message"
+                  rows={4}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#ff6b00] focus:border-[#ff6b00]"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full py-2 px-4 bg-[#2d1457] hover:bg-[#2d1457]/90 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-[#ff6b00] focus:ring-offset-2"
+              >
+                Отправить заявку
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

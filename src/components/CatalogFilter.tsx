@@ -29,6 +29,15 @@ export default function CatalogFilter({
     setExpandedCategories(newExpanded);
   };
 
+  const handleCategoryClick = (categoryId: string, hasSubcategories: boolean) => {
+    if (hasSubcategories) {
+      onCategoryChange(categoryId);
+      toggleCategory(categoryId);
+    } else {
+      onCategoryChange(categoryId);
+    }
+  };
+
   return (
     <div className="w-64 bg-white rounded-lg shadow-md p-4">
       <h3 className="text-lg font-semibold mb-4">Категории</h3>
@@ -36,16 +45,16 @@ export default function CatalogFilter({
         {categories.map((category) => (
           <div key={category.id} className="space-y-1">
             <button
-              onClick={() => toggleCategory(category.id)}
+              onClick={() => handleCategoryClick(category.id, !!category.subcategories?.length)}
               className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
                 selectedCategory === category.id
-                  ? 'bg-blue-50 text-blue-600 font-medium'
+                  ? 'bg-[#ff6b00]/10 text-[#ff6b00] font-medium'
                   : 'hover:bg-gray-50'
               }`}
             >
               <div className="flex items-center justify-between">
                 <span>{category.name}</span>
-                {category.subcategories && (
+                {category.subcategories && category.subcategories.length > 0 && (
                   <svg
                     className={`w-4 h-4 transform transition-transform ${
                       expandedCategories.has(category.id) ? 'rotate-180' : ''
@@ -72,7 +81,7 @@ export default function CatalogFilter({
                     onClick={() => onCategoryChange(subcategory.id)}
                     className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
                       selectedCategory === subcategory.id
-                        ? 'bg-blue-50 text-blue-600 font-medium'
+                        ? 'bg-[#ff6b00]/10 text-[#ff6b00] font-medium'
                         : 'hover:bg-gray-50'
                     }`}
                   >
