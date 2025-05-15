@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -8,11 +8,12 @@ export default function Footer() {
           <div>
             <h3 className="text-xl font-bold mb-4">Интерторг</h3>
             <p className="text-gray-400">
-              Реализуем полный цикл поставки импортного промышленного оборудования, 
-              запчастей и сырья из США, Европы и Китая на ваш склад с гарантией и постподдержкой.
+              Реализуем полный цикл поставки импортного промышленного
+              оборудования, запчастей и сырья из США, Европы и Китая на ваш
+              склад с гарантией и постподдержкой.
             </p>
           </div>
-          
+
           <div>
             <h3 className="text-xl font-bold mb-4">Контакты</h3>
             <address className="text-gray-400 not-italic">
@@ -25,33 +26,44 @@ export default function Footer() {
               </p>
             </address>
           </div>
-          
+
           <div>
             <h3 className="text-xl font-bold mb-4">Навигация</h3>
             <nav className="space-y-2">
-              <Link href="/about" className="block text-gray-400 hover:text-white">
+              <Link
+                href="/about"
+                className="block text-gray-400 hover:text-white"
+              >
                 О компании
               </Link>
-              <Link href="/equipment" className="block text-gray-400 hover:text-white">
-                Оборудование
+              <Link
+                href="/catalog"
+                className="block text-gray-400 hover:text-white"
+              >
+                Катагол
               </Link>
-              <Link href="/materials" className="block text-gray-400 hover:text-white">
-                Материалы
-              </Link>
-              <Link href="/services" className="block text-gray-400 hover:text-white">
+              <Link
+                href="/services"
+                className="block text-gray-400 hover:text-white"
+              >
                 Услуги
               </Link>
-              <Link href="/contacts" className="block text-gray-400 hover:text-white">
+              <Link
+                href="/contacts"
+                className="block text-gray-400 hover:text-white"
+              >
                 Контакты
               </Link>
             </nav>
           </div>
         </div>
-        
+
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} Интерторг. Все права защищены.</p>
+          <p>
+            &copy; {new Date().getFullYear()} Интерторг. Все права защищены.
+          </p>
         </div>
       </div>
     </footer>
   );
-} 
+}
